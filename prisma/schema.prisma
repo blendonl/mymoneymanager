@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id   String @id @default(uuid())
+  name String @unique
+}
+
+model User {
+  id        String    @id @default(uuid())
+  username  String    @unique
+  firstName String    @map("first_name")
+  lastName  String    @map("last_name")
+  email     String    @unique
+  incomes   Income[]
+  expenses  Expense[]
+}
+
+model IncomeType {
+  id      String   @id @default(uuid())
+  name    String
+  incomes Income[]
+}
+
+model Income {
+  id          String @id @default(uuid())
+  value       Int
+  description String
+  typeId      String @map("type_id")
+  userId      String @map("user_id")
+
+  type IncomeType @relation(fields: [typeId], references: [id])
+  user User       @relation(fields: [userId], references: [id])
+}
+
+model ExpenseType {
+  id       String    @id @default(uuid())
+  name     String
+  expenses Expense[]
+}
+
+model Expense {
+  id          String @id @default(uuid())
+  value       Int
+  description String
+  typeId      String @map("type_id")
+  userId      String @map("user_id")
+
+  type ExpenseType @relation(fields: [typeId], references: [id])
+  user User        @relation(fields: [userId], references: [id])
+}
