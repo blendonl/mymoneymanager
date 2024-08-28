@@ -1,0 +1,27 @@
+version: '3.4'
+services:
+  postgres:
+    container_name: 'mymoneymanager-api-database'
+    image: postgres:14-alpine
+    volumes:
+      - dbdata:/var/lib/postresql/data
+    ports:
+      - '127.0.0.1:5433:5432'
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: db
+  # cache:
+  #   container_name: 'fanapp-api-cache'
+  #   image: redis:latest
+  #   ports:
+  #     - 6379:6380
+  #   volumes:
+  #     - redisData:/data
+
+volumes:
+  dbdata:
+    name: db-volume
+
+  redisData:
+    name: mymoneymanager-be-cache
